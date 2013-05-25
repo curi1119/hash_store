@@ -45,7 +45,9 @@ class User < ActiveRecord::Base
 ```
 
 User instance will gain theses methods:
-* hash_store
+
+#### hash_store
+
 ```
 User#hash_store_key   # => "users:1"
 User#set_hash!        # => SET command for this instance.
@@ -55,7 +57,8 @@ User#get_hash!        # => GET command for this instance.
 User#del_hash!        # => DEL command for this instance.
 User#exists_hash?     # => true if key present on redis, false otherwise.
 ```
-* hash_store :address
+
+#### hash_store :address
 ```
 User#hash_store_key_address   # => "users:address:8"
 User#set_hash_address!
@@ -65,7 +68,8 @@ User#get_hash_address!        # => GET command for this instance.
 User#del_hash_address!
 User#exists_hash_address?
 ```
-* hash_store :for_name
+
+#### hash_store :for_name
 ```
 User#hash_store_key_for_name   # => "hoge:10"
 User#set_hash_for_name!
