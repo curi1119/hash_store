@@ -71,6 +71,8 @@ User#set_hash!        # => SET command for this instance.
 User#get_hash         # => GET command for this instance.
                            nil if key not found.
                            return hash(like {"address"=>"Nagoya, Japan", "first_name"=>"Hoge", "id"=>7, "last_name"=>"Foo"})
+User#get_hash(json: true)  # => If you pass {json: true}, get_hash don't convert json to hash.
+                                Its return json string("{\"address\":\"Nagoya, Japan\",\"first_name\":\"Hoge\",\"id\":8,\"last_name\":\"Foo\"}")
 User#del_hash!        # => DEL command for this instance.
 User#exists_hash?     # => true if key present on redis, false otherwise.
 
