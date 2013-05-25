@@ -38,10 +38,8 @@ EOS
           hs_redis.set(hs_key_proc.call(self), json)
         end
 
-        define_method "get_hash#{method_suffix}" do
-          json = hs_redis.get(hs_key_proc.call(self))
-          return nil if json.nil?
-          MultiJson.decode(json)
+        define_method "get_hash#{method_suffix}" do |options=nil|
+          self.class.send("get_hash#{method_suffix}", hs_key_proc.call(self), options)
         end
 
         define_method "del_hash#{method_suffix}!" do
@@ -61,9 +59,10 @@ EOS
         end
         private :hs_redis
 
-        define_singleton_method "get_hash#{method_suffix}" do |key|
+        define_singleton_method "get_hash#{method_suffix}" do |key, options=nil|
           json = HashStore::Config.redis.get(key)
           return nil if json.nil?
+          return json if options.present? && options[:json]
           MultiJson.decode(json)
         end
 

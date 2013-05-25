@@ -35,6 +35,7 @@ describe HashStore::Base do
       context "After SET" do
         before { user.set_hash! }
         it{ user.get_hash.should == user.as_json(root: false, except: [:created_at, :updated_at]) }
+        it{ user.get_hash(json: true).should == user.to_json(root: false, except: [:created_at, :updated_at]) }
       end
     end
 
