@@ -16,7 +16,7 @@ EOS
         end
       end
 
-      method_suffix = name.nil? ? '' : "_#{name}"
+      method_suffix = (name.nil? || name == '') ? '' : "_#{name}"
 
       if options[:hash].present?
         hs_hash_proc = options[:hash]
@@ -60,8 +60,18 @@ EOS
           HashStore::Config.redis
         end
         private :hs_redis
-      end
-    end
 
+        define_singleton_method "get_hash#{method_suffix}" do |key|
+          json = HashStore::Config.redis.get(key)
+          return nil if json.nil?
+          MultiJson.decode(json)
+        end
+
+        define_singleton_method "hash_store_key#{method_suffix}" do
+          hs_key_proc
+        end
+      end
+
+    end
   end
 end

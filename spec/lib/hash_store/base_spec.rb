@@ -3,8 +3,22 @@ require 'spec_helper'
 
 describe HashStore::Base do
 
+
   context "hash_store on User Model without options" do
     let!(:user){ create(:user) }
+
+    context "class methods on User" do
+      it{ User.hash_store_key.should be_instance_of(Proc) }
+
+      describe ".get_hash" do
+        it { User.get_hash("users:#{user.id}").should be_nil }
+
+        context "After SET" do
+          before { user.set_hash! }
+          it{ User.get_hash("users:#{user.id}").should == user.as_json(root: false, except: [:created_at, :updated_at]) }
+        end
+      end
+    end
 
     it { user.hash_store_key.should == "users:#{user.id}" }
 
@@ -44,6 +58,19 @@ describe HashStore::Base do
 
   context "hash_store on User Model with options" do
     let!(:user){ create(:user) }
+
+    context "class methods on User" do
+      it{ User.hash_store_key_for_name.should be_instance_of(Proc) }
+
+      describe ".get_hash_for_name" do
+        it { User.get_hash_for_name("hoge:#{user.id}").should be_nil }
+
+        context "After SET" do
+          before { user.set_hash_for_name! }
+          it{ User.get_hash_for_name("hoge:#{user.id}").should == user.as_json(root: false, only:[:id, ], methods: ["name"]) }
+        end
+      end
+    end
 
     it { user.hash_store_key_for_name.should == "hoge:#{user.id}" }
 
@@ -115,6 +142,7 @@ describe HashStore::Base do
       }
       it { player.hash_store_key_for_name.should == 'player:Curi:1' }
     end
-
   end
+
+
 end
