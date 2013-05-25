@@ -1,7 +1,7 @@
 # HashStore[![Build Status](https://travis-ci.org/curi1119/hash_store.png?branch=master)](https://travis-ci.org/curi1119/hash_store)[![Coverage Status](https://coveralls.io/repos/curi1119/hash_store/badge.png)](https://coveralls.io/r/curi1119/hash_store)
 
 HashStore store RubyHash into Redis as JSON.
-Automatically add redis commands(GET,SET,DEL,EXITS) methods to your class.
+Automatically add redis command(GET,SET,DEL,EXITS) methods to your class.
 HashStore was designed to work with ActiveRecord, but also work with Non-ActiveRecord Class.
 
 ## Installation
