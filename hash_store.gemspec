@@ -8,9 +8,14 @@ Gem::Specification.new do |spec|
   spec.version       = HashStore::VERSION
   spec.authors       = ["M.Iwasaki(Curi)"]
   spec.email         = ["curi1119@gmail.com"]
-  spec.description   = %q{}
-  spec.summary       = %q{}
-  spec.homepage      = ""
+  spec.description   = <<-EOS
+    HashStore store RubyHash into Redis as JSON.
+    Automatically add redis commands(GET,SET,DEL,EXITS) methods to your class.
+    HashStore was designed to work with ActiveRecord, but also work with Non-ActiveRecord Class.
+  EOS
+
+  spec.summary       = %q{HashStore store RubyHash into Redis as JSON.}
+  spec.homepage      = "https://github.com/curi1119/hash_store"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

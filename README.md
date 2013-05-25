@@ -1,6 +1,7 @@
 # HashStore
 
-HashStore store RubyHash on Redis as JSON.
+HashStore store RubyHash into Redis as JSON.
+Automatically add redis commands(GET,SET,DEL,EXITS) methods to your class.
 HashStore was designed to work with ActiveRecord, but also work with Non-ActiveRecord Class.
 
 ## Installation
