@@ -51,7 +51,7 @@ User instance will gain theses methods:
 ```
 User#hash_store_key   # => "users:1"
 User#set_hash!        # => SET command for this instance.
-User#get_hash!        # => GET command for this instance.
+User#get_hash         # => GET command for this instance.
                            nil if key not found.
                            return hash(like {"address"=>"Nagoya, Japan", "first_name"=>"Hoge", "id"=>7, "last_name"=>"Foo"})
 User#del_hash!        # => DEL command for this instance.
@@ -62,7 +62,7 @@ User#exists_hash?     # => true if key present on redis, false otherwise.
 ```
 User#hash_store_key_address   # => "users:address:8"
 User#set_hash_address!
-User#get_hash_address!        # => GET command for this instance.
+User#get_hash_address         # => GET command for this instance.
                                    nil if key not found.
                                    return hash(like {"address"=>"Nagoya, Japan"}
 User#del_hash_address!
@@ -73,7 +73,7 @@ User#exists_hash_address?
 ```
 User#hash_store_key_for_name   # => "hoge:10"
 User#set_hash_for_name!
-User#get_hash_for_name!        # => GET command for this instance.
+User#get_hash_for_name         # => GET command for this instance.
                                     nil if key not found.
                                     return hash(like {"id"=>16, "name"=>"Hoge Foo"})
 User#del_hash_for_name!
