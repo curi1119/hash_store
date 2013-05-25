@@ -5,6 +5,9 @@ require 'active_record'
 require 'mock_redis'
 require 'hash_store'
 
+require 'coveralls'
+Coveralls.wear!
+
 ActiveRecord::Base.configurations = YAML::load(ERB.new(IO.read(File.dirname(__FILE__) + "/db/database.yml")).result)
 ActiveRecord::Base.establish_connection("sqlite3")
 ActiveRecord::Migration.verbose = false
