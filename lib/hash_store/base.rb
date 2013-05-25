@@ -9,7 +9,7 @@ module HashStore::Base
           raise unless options[:key].present?
         rescue => e
           print  <<-EOS
-When using hash_store on Non-ActiveRecord class, you MUST pass name and options arguments.
+When using hash_store on Non-ActiveRecord class, you MUST pass name and options(:key and :hash) arguments.
 ex.) hash_store :name, key: ->(ins){ "name_of_key:\#{ins.id}"}, hash: ->(ins){ {address: ins.address} }
 EOS
           return

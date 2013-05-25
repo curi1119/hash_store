@@ -1,8 +1,17 @@
-# HashStore[![Build Status](https://travis-ci.org/curi1119/hash_store.png?branch=master)](https://travis-ci.org/curi1119/hash_store)[![Coverage Status](https://coveralls.io/repos/curi1119/hash_store/badge.png)](https://coveralls.io/r/curi1119/hash_store)
+# HashStore
+
+[![Gem Version](https://badge.fury.io/rb/hash_store.png)](http://badge.fury.io/rb/hash_store)
+[![Build Status](https://travis-ci.org/curi1119/hash_store.png?branch=master)](https://travis-ci.org/curi1119/hash_store)
+[![Coverage Status](https://coveralls.io/repos/curi1119/hash_store/badge.png)](https://coveralls.io/r/curi1119/hash_store)
+[![Code Climate](https://codeclimate.com/github/curi1119/hash_store.png)](https://codeclimate.com/github/curi1119/hash_store)
+[![Dependency Status](https://gemnasium.com/curi1119/hash_store.png)](https://gemnasium.com/curi1119/hash_store)
 
 HashStore store RubyHash into Redis as JSON.
+
 Automatically add redis command(GET,SET,DEL,EXITS) methods to your class.
 HashStore was designed to work with ActiveRecord, but also work with Non-ActiveRecord Class.
+
+-
 
 ## Installation
 
@@ -44,11 +53,18 @@ class User < ActiveRecord::Base
              key: ->(model){ "hoge:#{model.id}" },
              hash: ->(model){ {id: model.id, name: model.name } }
 ```
+see more detail
+[schema](https://github.com/curi1119/hash_store/blob/master/spec/db/schema.rb)
+[model](https://github.com/curi1119/hash_store/blob/master/spec/support/models.rb)
+[sample data](https://github.com/curi1119/hash_store/blob/master/spec/factories/models.rb)
 
-User instance will gain theses methods:
-
-#### hash_store
-
+#### Default Behavior
+```ruby
+  hash_store
+```
+This is default behavior.
+Redis key will be "{table_name}:#{record id}" .
+Hash will contain all columns except created_at, updated_at.
 ```
 User#hash_store_key   # => "users:1"
 User#set_hash!        # => SET command for this instance.
@@ -57,9 +73,16 @@ User#get_hash         # => GET command for this instance.
                            return hash(like {"address"=>"Nagoya, Japan", "first_name"=>"Hoge", "id"=>7, "last_name"=>"Foo"})
 User#del_hash!        # => DEL command for this instance.
 User#exists_hash?     # => true if key present on redis, false otherwise.
+
+User.hash_store_key       # => returns key proc object.
+User.get_hash("users:1")  # => returns same hash as User#get_hash
 ```
 
-#### hash_store :address
+#### Customize Hash
+```ruby
+   hash_store :address, hash: ->(model){ {address: model.address} }
+```
+You can customize hash.
 ```
 User#hash_store_key_address   # => "users:address:8"
 User#set_hash_address!
@@ -68,9 +91,18 @@ User#get_hash_address         # => GET command for this instance.
                                    return hash(like {"address"=>"Nagoya, Japan"}
 User#del_hash_address!
 User#exists_hash_address?
+
+User.hash_store_key_address
+User.get_hash_address("users:address:8")  # => returns same hash as User#get_hash_address
+
 ```
 
-#### hash_store :for_name
+#### Customize Key and Hash
+```ruby
+hash_store :for_name,  key: ->(model){ "hoge:#{model.id}" },  hash: ->(model){ {id: model.id, name: model.name } }`
+```
+
+And you can specify key for redis.
 ```
 User#hash_store_key_for_name   # => "hoge:10"
 User#set_hash_for_name!
@@ -79,6 +111,9 @@ User#get_hash_for_name         # => GET command for this instance.
                                     return hash(like {"id"=>16, "name"=>"Hoge Foo"})
 User#del_hash_for_name!
 User#exists_hash_for_name?
+
+User.hash_store_key_for_name
+User.get_hash_for_name("hoge:10")  # => returns same hash as User#get_hash_for_name
 ```
 
 
@@ -95,3 +130,5 @@ class Player
              hash: ->(ins){ {name: ins.name} }
 ```
 (same as above)
+
+But, you must pass name, options(:key and :hash) arguments to hash_store.
