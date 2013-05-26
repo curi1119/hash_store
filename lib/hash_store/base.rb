@@ -3,10 +3,10 @@
 module HashStore::Base
   module ClassMethods
     def hash_store(name=nil, options={})
-      unless self.ancestors.include?(ActiveRecord::Base)
+      if !defined?(ActiveRecord::Base) || !self.ancestors.include?(ActiveRecord::Base)
         begin
-          raise unless options[:hash].present?
-          raise unless options[:key].present?
+          raise if options[:hash].nil?
+          raise if options[:key].nil?
         rescue => e
           print  <<-EOS
 When using hash_store on Non-ActiveRecord class, you MUST pass name and options(:key and :hash) arguments.
@@ -18,15 +18,15 @@ EOS
 
       method_suffix = (name.nil? || name == '') ? '' : "_#{name}"
 
-      if options[:hash].present?
+      if !options[:hash].nil?
         hs_hash_proc = options[:hash]
       else
         hs_hash_proc = ->(model){ model.as_json(root: false, except: [:created_at, :updated_at]) }
       end
 
-      if options[:key].present?
+      if !options[:key].nil?
         hs_key_proc = options[:key]
-      elsif name.present? && options[:key].nil?
+      elsif method_suffix != '' && options[:key].nil?
         hs_key_proc  = ->(model){ "#{model.class.table_name}:#{name}:#{model.id}" }
       else
         hs_key_proc  = ->(model){ "#{model.class.table_name}:#{model.id}" }
@@ -62,7 +62,7 @@ EOS
         define_singleton_method "get_hash#{method_suffix}" do |key, options=nil|
           json = HashStore::Config.redis.get(key)
           return nil if json.nil?
-          return json if options.present? && options[:json]
+          return json if !options.nil? && options[:json]
           MultiJson.decode(json)
         end
 
