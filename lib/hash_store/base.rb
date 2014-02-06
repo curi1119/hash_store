@@ -2,6 +2,9 @@
 
 module HashStore::Base
   module ClassMethods
+    JSON_DUMP_OPTIONS = { mode: :compat, time_format: :ruby    }.freeze
+    JSON_LOAD_OPTIONS = { mode: :strict, symbolize_keys: false }.freeze
+
     def hash_store(name=nil, options={})
       if !defined?(ActiveRecord::Base) || !self.ancestors.include?(ActiveRecord::Base)
         begin
@@ -34,7 +37,7 @@ EOS
 
       class_eval do
         define_method "set_hash#{method_suffix}!" do
-          json = MultiJson.encode(hs_hash_proc.call(self))
+          json = ::Oj.dump(hs_hash_proc.call(self), JSON_DUMP_OPTIONS)
           hs_redis.set(hs_key_proc.call(self), json)
         end
 
@@ -63,7 +66,7 @@ EOS
           json = HashStore::Config.redis.get(key)
           return nil if json.nil?
           return json if !options.nil? && options[:json]
-          MultiJson.decode(json)
+          ::Oj.load(json, JSON_LOAD_OPTIONS)
         end
 
         define_singleton_method "hash_store_key#{method_suffix}" do

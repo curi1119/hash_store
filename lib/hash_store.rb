@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 require "redis"
-require "multi_json"
+require "oj"
 require "hash_store/version"
 require "hash_store/base"
 
